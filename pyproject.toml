@@ -2,7 +2,7 @@
 python_paths = "backend/"
 DJANGO_SETTINGS_MODULE = "foodgram.settings"
 addopts = "-vv -p no:cacheprovider"
-testpaths = "tests/"
+testpaths = "backend/tests/"
 python_files = "test_*.py"
 
 [tool.black]
@@ -17,7 +17,6 @@ src_paths = ["backend",]
 [tool.flake8]
 ignore = ['W503', 'D10', 'ANN101']
 exclude = [
-    'tests/',
     '*/migrations/',
     'venv/',
     '.venv/',
