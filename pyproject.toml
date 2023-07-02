@@ -1,0 +1,30 @@
+[tool.pytest.ini_options]
+python_paths = "backend/"
+DJANGO_SETTINGS_MODULE = "foodgram.settings"
+addopts = "-vv -p no:cacheprovider"
+testpaths = "tests/"
+python_files = "test_*.py"
+
+[tool.black]
+line-length = 79
+skip-string-normalization = true
+
+[tool.isort]
+line_length = 79
+profile = "black"
+src_paths = ["backend",]
+
+[tool.flake8]
+ignore = ['W503', 'D10', 'ANN101']
+exclude = [
+    'tests/',
+    '*/migrations/',
+    'venv/',
+    '.venv/',
+    'env/',
+]
+per-file-ignores = ['*/settings.py: E501',]
+max-complexity = 10
+
+[tool.mypy]
+ignore_missing_imports = true
