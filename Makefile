@@ -22,7 +22,6 @@ upnotest:
 
 test:
 	pytest backend/
-	$(MANAGE) test $(WORKDIR) -v 2
 
 up: test
 	$(MANAGE) runserver

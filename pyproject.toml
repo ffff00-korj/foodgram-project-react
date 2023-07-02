@@ -1,5 +1,4 @@
 [tool.pytest.ini_options]
-python_paths = "backend/"
 DJANGO_SETTINGS_MODULE = "foodgram.settings"
 addopts = "-vv -p no:cacheprovider"
 testpaths = "backend/tests/"
