@@ -13,6 +13,7 @@ DEBUG = int(os.getenv('DJANGO_DEBUG', 0))
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
+# fmt: off
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -23,6 +24,7 @@ INSTALLED_APPS = [
 
     'api',
 ]
+# fmt: on
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
