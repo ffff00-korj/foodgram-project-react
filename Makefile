@@ -10,6 +10,9 @@ style:
 	mypy $(WORKDIR)
 	pymarkdown scan .
 
+admin:
+	$(MANAGE) createsuperuser
+
 shell:
 	$(MANAGE) shell
 
