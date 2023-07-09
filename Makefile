@@ -19,10 +19,16 @@ db:
 	$(MANAGE) migrate
 
 up:
-	docker compose -f $(DOCKER_COMPOSE) up
+	docker compose -f $(DOCKER_COMPOSE) up -d
+
+down:
+	docker compose -f $(DOCKER_COMPOSE) down -v
 
 test:
 	pytest backend/
+
+show_logs:
+	docker compose -f $(DOCKER_COMPOSE) logs
 
 env:
 	pyenv local $(PYTHON-VERSION)

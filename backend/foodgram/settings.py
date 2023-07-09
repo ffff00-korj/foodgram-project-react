@@ -11,16 +11,17 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 DEBUG = int(os.getenv('DJANGO_DEBUG', 0))
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', [
+                          'localhost', '127.0.0.1', 'i.0.0.0'])
 
 # fmt: off
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
+    'django.contrib.contenttypes',
     'django.contrib.staticfiles',
+    'django.contrib.messages',
 
     'api',
 ]
@@ -99,6 +100,8 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = '/static'
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
 
