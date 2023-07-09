@@ -2,6 +2,7 @@ WORKDIR = backend
 PYTHON-VERSION = 3.9.11
 PROJECT-NAME = foodgram
 MANAGE = python $(WORKDIR)/manage.py
+DOCKER_COMPOSE = infra/docker-compose.yml
 
 style:
 	black $(WORKDIR)
@@ -13,21 +14,15 @@ style:
 admin:
 	$(MANAGE) createsuperuser
 
-shell:
-	$(MANAGE) shell
-
 db:
 	$(MANAGE) makemigrations
 	$(MANAGE) migrate
 
-upnotest:
-	$(MANAGE) runserver
+up:
+	docker compose -f $(DOCKER_COMPOSE) up
 
 test:
 	pytest backend/
-
-up: test
-	$(MANAGE) runserver
 
 env:
 	pyenv local $(PYTHON-VERSION)
