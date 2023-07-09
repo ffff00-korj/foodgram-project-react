@@ -22,7 +22,7 @@ up:
 	docker compose -f $(DOCKER_COMPOSE) up -d
 
 down:
-	docker compose -f $(DOCKER_COMPOSE) down -v
+	docker compose -f $(DOCKER_COMPOSE) down
 
 test:
 	pytest backend/
