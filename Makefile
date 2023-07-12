@@ -12,14 +12,15 @@ style:
 	pymarkdown scan .
 
 admin:
-	$(MANAGE) createsuperuser
+	docker compose -f $(DOCKER_COMPOSE) exec backend python manage.py createsuperuser
 
 db:
 	$(MANAGE) makemigrations
 	$(MANAGE) migrate
 
 up:
-	docker compose -f $(DOCKER_COMPOSE) up -d
+	docker compose -f $(DOCKER_COMPOSE) up -d --build
+	docker compose -f $(DOCKER_COMPOSE) exec backend /app/entrypoint.sh
 
 down:
 	docker compose -f $(DOCKER_COMPOSE) down
