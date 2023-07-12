@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 DEBUG = int(os.getenv('DJANGO_DEBUG', 0))
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split()
+ALLOWED_HOSTS = str(os.getenv('DJANGO_ALLOWED_HOSTS')).split()
 
 # fmt: off
 INSTALLED_APPS = [
@@ -66,7 +66,7 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
         'HOST': os.getenv('DB_HOST', ''),
         'PORT': os.getenv('DB_PORT', 5432),
-    }
+    },
 }
 
 AUTH_PASSWORD_VALIDATORS = [
