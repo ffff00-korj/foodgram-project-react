@@ -15,14 +15,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
+            'id',
             'username',
             'email',
             'first_name',
             'last_name',
         )
-        lookup_field = 'username'
-
-    def validate_username(self, username: str) -> str:
-        if User.objects.filter(username=username).exists():
-            raise serializers.ValidationError('Этот имя уже занято')
-        return username

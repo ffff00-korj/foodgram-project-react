@@ -24,9 +24,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
 
     'rest_framework',
+    'rest_framework.authtoken',
     'djoser',
 
     'api',
+    'users',
 ]
 # fmt: on
 
@@ -113,11 +115,17 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
+}
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+AUTH_USER_MODEL = 'users.User'
