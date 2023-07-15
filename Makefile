@@ -1,8 +1,7 @@
 WORKDIR = backend
 PYTHON-VERSION = 3.9.11
 PROJECT-NAME = foodgram
-MANAGE = python $(WORKDIR)/manage.py
-DOCKER_COMPOSE = infra/docker-compose.yml
+DOCKER_COMPOSE = docker compose -f infra/docker-compose.yml
 
 style:
 	black $(WORKDIR)
@@ -12,28 +11,24 @@ style:
 	pymarkdown scan .
 
 admin:
-	docker compose -f $(DOCKER_COMPOSE) exec backend python manage.py createsuperuser
+	$(DOCKER_COMPOSE) exec backend python manage.py createsuperuser
 
-db:
-	$(MANAGE) makemigrations
-	$(MANAGE) migrate
+migrations:
+	$(DOCKER_COMPOSE) exec backend python manage.py makemigrations
 
-up:
-	docker compose -f $(DOCKER_COMPOSE) up -d --build
-	docker compose -f $(DOCKER_COMPOSE) exec backend /app/entrypoint.sh
+build:
+	$(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) up -d --build
 
 down:
-	docker compose -f $(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) down
 
-test:
-	pytest backend/
-
-show_logs:
-	docker compose -f $(DOCKER_COMPOSE) logs
+logs:
+	$(DOCKER_COMPOSE) logs
 
 env:
 	pyenv local $(PYTHON-VERSION)
 	pyenv virtualenv $(PYTHON-VERSION) $(PROJECT-NAME)
 	pyenv local $(PROJECT-NAME)
 	python -m pip install --upgrade pip
-	pip install -r requirements.txt
+	python -m pip install -r $(WORKDIR)/requirements.txt
