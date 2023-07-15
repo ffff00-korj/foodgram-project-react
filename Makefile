@@ -19,6 +19,7 @@ migrations:
 build:
 	$(DOCKER_COMPOSE) down
 	$(DOCKER_COMPOSE) up -d --build
+	$(DOCKER_COMPOSE) exec backend /app/entrypoint.sh
 
 down:
 	$(DOCKER_COMPOSE) down
@@ -31,4 +32,4 @@ env:
 	pyenv virtualenv $(PYTHON-VERSION) $(PROJECT-NAME)
 	pyenv local $(PROJECT-NAME)
 	python -m pip install --upgrade pip
-	python -m pip install -r $(WORKDIR)/requirements.txt
+	pip install -r $(WORKDIR)/requirements.txt

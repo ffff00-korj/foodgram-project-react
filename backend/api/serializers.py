@@ -1,4 +1,8 @@
 from django.contrib.auth import get_user_model
+from djoser.conf import settings
+from djoser.serializers import (
+    UserCreateSerializer as DjoserUserCreateSerializer,
+)
 from rest_framework import serializers
 
 User = get_user_model()
@@ -7,6 +11,10 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     """Serializer создания нового пользователя."""
 
+    password = serializers.CharField(
+        style={"input_type": "password"},
+        write_only=True,
+    )
     email = serializers.EmailField(
         max_length=254,
         required=True,
@@ -18,6 +26,21 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'email',
+            'first_name',
+            'last_name',
+            'password',
+        )
+
+
+class UserCreateSerializer(DjoserUserCreateSerializer):
+    """Serializer создания нового пользователя."""
+
+    class Meta:
+        model = User
+        fields = tuple(User.REQUIRED_FIELDS) + (
+            settings.LOGIN_FIELD,
+            settings.USER_ID_FIELD,
+            'password',
             'first_name',
             'last_name',
         )

@@ -1,5 +1,4 @@
 import os
-from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -120,12 +119,13 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
+    'USER_ID_FIELD': 'username',
     'LOGIN_FIELD': 'email',
-}
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'AUTH_HEADER_TYPES': ('Bearer',),
+    'SERIALIZERS': {
+        'user_create': 'api.serializers.UserCreateSerializer',
+        'current_user': 'api.serializers.UserSerializer',
+        'user': 'api.serializers.UserSerializer',
+    },
 }
 
 AUTH_USER_MODEL = 'users.User'
