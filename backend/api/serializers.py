@@ -15,10 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
         style={"input_type": "password"},
         write_only=True,
     )
-    email = serializers.EmailField(
-        max_length=254,
-        required=True,
-    )
+    email = serializers.EmailField(required=True)
 
     class Meta:
         model = User
