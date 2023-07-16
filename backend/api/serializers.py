@@ -20,12 +20,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id',
-            'username',
             'email',
             'first_name',
+            'id',
             'last_name',
             'password',
+            'username',
         )
 
 
@@ -37,7 +37,8 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
         fields = tuple(User.REQUIRED_FIELDS) + (
             settings.LOGIN_FIELD,
             settings.USER_ID_FIELD,
-            'password',
             'first_name',
             'last_name',
+            'password',
+            'username',
         )
