@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from djoser.conf import settings
 from djoser.serializers import (
-    UserCreateSerializer as DjoserUserCreateSerializer,
+    UserCreateSerializer as BaseUserCreateSerializer,
 )
 from rest_framework import serializers
 
@@ -29,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
-class UserCreateSerializer(DjoserUserCreateSerializer):
+class UserCreateSerializer(BaseUserCreateSerializer):
     """Serializer создания нового пользователя."""
 
     class Meta:
