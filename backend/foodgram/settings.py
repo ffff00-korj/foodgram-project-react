@@ -22,9 +22,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.messages',
 
+    'djoser',
     'rest_framework',
     'rest_framework.authtoken',
-    'djoser',
 
     'api',
     'food',
