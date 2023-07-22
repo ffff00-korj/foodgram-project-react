@@ -27,6 +27,8 @@ INSTALLED_APPS = [
     'djoser',
 
     'api',
+    'food',
+    'gram',
     'users',
 ]
 # fmt: on
