@@ -40,3 +40,13 @@ class Subscription(models.Model):
         on_delete=models.CASCADE,
         help_text='на кого подписался пользователь',
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'author'],
+                name='unique_user_author',
+            ),
+            models.CheckConstraint(check=~models.Q(
+                user=models.F('author')), name='no_selt_sub'),
+        ]
