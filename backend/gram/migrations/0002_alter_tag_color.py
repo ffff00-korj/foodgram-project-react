@@ -5,7 +5,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('gram', '0001_initial'),
     ]
@@ -14,6 +13,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='tag',
             name='color',
-            field=colorfield.fields.ColorField(default='#FFFFFF', help_text='цвет тега', image_field=None, max_length=18, samples=None),
+            field=colorfield.fields.ColorField(
+                default='#FFFFFF',
+                help_text='цвет тега',
+                image_field=None,
+                max_length=18,
+                samples=None,
+            ),
         ),
     ]

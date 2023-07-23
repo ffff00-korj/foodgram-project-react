@@ -1,6 +1,13 @@
 from django.contrib import admin
+
+from food.models import (
+    FavoriteRecipe,
+    Ingredient,
+    Recipe,
+    RecipeIngrideint,
+    ShoppingList,
+)
 from foodgram.admin import BaseAdmin
-from food.models import Recipe, Ingredient, RecipeIngrideint, ShoppingList, FavoriteRecipe
 
 
 class RecipeIngrideintInline(admin.TabularInline):

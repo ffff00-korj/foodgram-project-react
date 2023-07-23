@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from foodgram.admin import BaseAdmin
-from gram.models import Tag, Subscription
+from gram.models import Subscription, Tag
 
 
 @admin.register(Tag)
