@@ -17,12 +17,12 @@ admin:
 migrations:
 	$(DOCKER_COMPOSE) exec backend python manage.py makemigrations
 
-build:
+up:
 	$(DOCKER_COMPOSE) down
 	$(DOCKER_COMPOSE) up -d --build
 	$(DOCKER_COMPOSE) exec backend /app/entrypoint.sh
 
-build-debug:
+up-debug:
 	$(DOCKER_COMPOSE_DEBUG) down
 	$(DOCKER_COMPOSE_DEBUG) up -d --build
 	$(DOCKER_COMPOSE_DEBUG) exec backend /app/entrypoint.sh
