@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
 
+from foodgram.utils import set_title_from_text
 from gram.models import Tag
 
 User = get_user_model()
@@ -18,6 +19,9 @@ class Ingredient(models.Model):
         verbose_name='ед. изм.',
         help_text='единица изменения (например грамм)',
     )
+
+    def __str__(self) -> str:
+        return set_title_from_text(self.name)
 
 
 class Recipe(models.Model):
@@ -51,7 +55,7 @@ class Recipe(models.Model):
         Ingredient,
         verbose_name='ингридиенты',
         blank=True,
-        through='RecipeIngrideints',
+        through='RecipeIngrideint',
     )
     tags = models.ManyToManyField(
         Tag,
@@ -60,8 +64,11 @@ class Recipe(models.Model):
         help_text='метки, присвоенные рецепту',
     )
 
+    def __str__(self) -> str:
+        return set_title_from_text(self.name)
 
-class RecipeIngrideints(models.Model):
+
+class RecipeIngrideint(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='рецепт',
@@ -74,9 +81,20 @@ class RecipeIngrideints(models.Model):
     )
     amount = models.PositiveIntegerField(
         validators=[MinValueValidator(1)],
+        default=1,
         verbose_name='количество ингридиентов',
         help_text='количество ингридиентов для рецепта',
     )
+
+    class Meta:
+        default_related_name = 'ingrideints'
+        ordering = ['-amount']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['recipe', 'ingredient'],
+                name='unique_recipe_ingredient',
+            ),
+        ]
 
 
 class ShoppingList(models.Model):

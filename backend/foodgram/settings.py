@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.messages',
 
+    'colorfield',
     'djoser',
     'rest_framework',
     'rest_framework.authtoken',
@@ -107,7 +108,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = BASE_DIR / 'collected_static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -138,3 +139,5 @@ DJOSER = {
 }
 
 AUTH_USER_MODEL = 'users.User'
+
+MODEL_STR_REPRESENTATION_LIMIT = 25

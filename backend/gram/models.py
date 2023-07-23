@@ -1,5 +1,6 @@
 from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
+from foodgram.utils import set_title_from_text
 from django.db import models
 
 User = get_user_model()
@@ -17,9 +18,11 @@ class Tag(models.Model):
         help_text='идентификатор тэга',
     )
     color = ColorField(
-        format='hexa',
         help_text='цвет тега',
     )
+
+    def __str__(self) -> str:
+        return set_title_from_text(self.name)
 
 
 class Subscription(models.Model):
