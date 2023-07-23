@@ -1,6 +1,6 @@
 from django.contrib import admin
 from foodgram.admin import BaseAdmin
-from food.models import Recipe, Ingredient, RecipeIngrideint
+from food.models import Recipe, Ingredient, RecipeIngrideint, ShoppingList, FavoriteRecipe
 
 
 class RecipeIngrideintInline(admin.TabularInline):
@@ -40,3 +40,33 @@ class RecipeAdmin(BaseAdmin):
     @admin.display(description='теги')
     def _tags(self, obj):
         return [tag.name for tag in obj.tags.all()]
+
+
+@admin.register(ShoppingList)
+class ShoppingListAdmin(BaseAdmin):
+    list_display = (
+        'pk',
+        'user',
+        '_recipes',
+    )
+    list_editable = ('user',)
+    search_fields = ('user',)
+
+    @admin.display(description='рецепты')
+    def _recipes(self, obj):
+        return [recipes.name for recipes in obj.recipes.all()]
+
+
+@admin.register(FavoriteRecipe)
+class FavoriteRecipeAdmin(BaseAdmin):
+    list_display = (
+        'pk',
+        'user',
+        '_recipes',
+    )
+    list_editable = ('user',)
+    search_fields = ('user',)
+
+    @admin.display(description='рецепты')
+    def _recipes(self, obj):
+        return [recipes.name for recipes in obj.recipes.all()]
