@@ -21,7 +21,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.messages',
 
-    'admin_reorder',
     'colorfield',
     'djoser',
     'rest_framework',
