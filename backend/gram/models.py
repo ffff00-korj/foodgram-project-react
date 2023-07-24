@@ -16,11 +16,17 @@ class Tag(models.Model):
     slug = models.SlugField(
         max_length=200,
         unique=True,
+        verbose_name='слаг',
         help_text='идентификатор тэга',
     )
     color = ColorField(
+        verbose_name='цвет',
         help_text='цвет тега',
     )
+
+    class Meta:
+        verbose_name = 'тег'
+        verbose_name_plural = 'теги'
 
     def __str__(self) -> str:
         return set_title_from_text(self.name)
@@ -43,6 +49,8 @@ class Subscription(models.Model):
     )
 
     class Meta:
+        verbose_name = 'подписка'
+        verbose_name_plural = 'подписки'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'author'],

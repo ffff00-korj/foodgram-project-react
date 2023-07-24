@@ -1,4 +1,6 @@
 from django.contrib import admin
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 from food.models import (
     FavoriteRecipe,
@@ -8,8 +10,6 @@ from food.models import (
     ShoppingList,
 )
 from foodgram.admin import BaseAdmin
-from import_export import resources
-from import_export.admin import ImportExportModelAdmin
 
 
 class RecipeIngrideintInline(admin.TabularInline):
@@ -18,7 +18,6 @@ class RecipeIngrideintInline(admin.TabularInline):
 
 
 class IngredientResource(resources.ModelResource):
-
     class Meta:
         model = Ingredient
 

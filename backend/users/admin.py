@@ -1,9 +1,9 @@
 from django.contrib import admin
+from django.contrib.auth import get_user_model, admin as auth_admin
 
-from foodgram.admin import BaseAdmin
-from users.models import User
+User = get_user_model()
 
 
 @admin.register(User)
-class UserAdmin(BaseAdmin):
-    pass
+class UserAdmin(auth_admin.UserAdmin):
+    empty_value_display = '-пусто-'

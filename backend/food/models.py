@@ -20,6 +20,10 @@ class Ingredient(models.Model):
         help_text='единица изменения (например грамм)',
     )
 
+    class Meta:
+        verbose_name = 'ингридиент'
+        verbose_name_plural = 'ингридиенты'
+
     def __str__(self) -> str:
         return set_title_from_text(self.name)
 
@@ -63,6 +67,10 @@ class Recipe(models.Model):
         blank=True,
         help_text='метки, присвоенные рецепту',
     )
+
+    class Meta:
+        verbose_name = 'рецепт'
+        verbose_name_plural = 'рецепты'
 
     def __str__(self) -> str:
         return set_title_from_text(self.name)
@@ -110,6 +118,10 @@ class ShoppingList(models.Model):
         help_text='рецепты в списке покупок',
     )
 
+    class Meta:
+        verbose_name = 'список покупок'
+        verbose_name_plural = 'списки покупок'
+
 
 class FavoriteRecipe(models.Model):
     user = models.ForeignKey(
@@ -123,3 +135,7 @@ class FavoriteRecipe(models.Model):
         verbose_name='рецепты',
         help_text='отмеченные рецепты',
     )
+
+    class Meta:
+        verbose_name = 'избранный рецепт'
+        verbose_name_plural = 'избранные рецепты'
