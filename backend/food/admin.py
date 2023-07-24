@@ -8,6 +8,8 @@ from food.models import (
     ShoppingList,
 )
 from foodgram.admin import BaseAdmin
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 
 class RecipeIngrideintInline(admin.TabularInline):
@@ -15,8 +17,15 @@ class RecipeIngrideintInline(admin.TabularInline):
     extra = 1
 
 
+class IngredientResource(resources.ModelResource):
+
+    class Meta:
+        model = Ingredient
+
+
 @admin.register(Ingredient)
-class IngredientAdmin(BaseAdmin):
+class IngredientAdmin(ImportExportModelAdmin):
+    resource_class = IngredientResource
     list_display = (
         'pk',
         'name',
