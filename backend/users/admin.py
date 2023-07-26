@@ -8,3 +8,6 @@ User = get_user_model()
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
     empty_value_display = '-пусто-'
+
+
+admin.site.unregister(auth_admin.Group)
