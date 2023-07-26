@@ -27,6 +27,7 @@ class Tag(models.Model):
     class Meta:
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
+        ordering = ['slug']
 
     def __str__(self) -> str:
         return set_title_from_text(self.name)

@@ -67,10 +67,12 @@ class Recipe(models.Model):
         blank=True,
         help_text='метки, присвоенные рецепту',
     )
+    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
     class Meta:
         verbose_name = 'рецепт'
         verbose_name_plural = 'рецепты'
+        ordering = ['-pub_date']
 
     def __str__(self) -> str:
         return set_title_from_text(self.name)

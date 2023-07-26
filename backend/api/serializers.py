@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from djoser.conf import settings
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from rest_framework import serializers
+from drf_extra_fields.fields import Base64ImageField
+from django.db.models import F
 
 from food.models import Ingredient, Recipe, RecipeIngrideint
 from gram.models import Tag
@@ -47,11 +49,14 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def get_is_subscribed(self, user: User) -> bool:
-        return self.context.get('request').user.subscriber.filter(author=user).exists()
+        return (
+            self.context.get('request')
+            .user.subscriber.filter(author=user)
+            .exists()
+        )
 
 
 class TagSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Tag
         fields = (
@@ -68,13 +73,16 @@ class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = ('id', 'name', 'measurement_unit')
+        read_only_fields = ('id', 'name', 'measurement_unit')
 
 
 class RecipeSerializer(serializers.ModelSerializer):
     """Serializer получения рецептов"""
-    tags = TagSerializer(many=True, read_only=True)
-    ingredients = IngredientSerializer(many=True, read_only=True)
-    author = UserSerializer(read_only=True)
+
+    tags = TagSerializer(many=True)
+    ingredients = IngredientSerializer(many=True)
+    author = UserSerializer()
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
