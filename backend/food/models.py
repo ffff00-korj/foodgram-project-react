@@ -81,11 +81,13 @@ class Recipe(models.Model):
 class RecipeIngrideint(models.Model):
     recipe = models.ForeignKey(
         Recipe,
+        related_name='ingrideints',
         verbose_name='рецепт',
         on_delete=models.CASCADE,
     )
     ingredient = models.ForeignKey(
         Ingredient,
+        related_name='recipes',
         verbose_name='ингридиент',
         on_delete=models.CASCADE,
     )
@@ -97,7 +99,6 @@ class RecipeIngrideint(models.Model):
     )
 
     class Meta:
-        default_related_name = 'ingrideints'
         ordering = ['-amount']
         constraints = [
             models.UniqueConstraint(

@@ -5,17 +5,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='FavoriteRecipe',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'избранный рецепт',
@@ -26,9 +32,31 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Ingredient',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='название ингридиета', max_length=200, verbose_name='имя')),
-                ('measurement_unit', models.CharField(help_text='единица изменения (например грамм)', max_length=200, verbose_name='ед. изм.')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(
+                        help_text='название ингридиета',
+                        max_length=200,
+                        verbose_name='имя',
+                    ),
+                ),
+                (
+                    'measurement_unit',
+                    models.CharField(
+                        help_text='единица изменения (например грамм)',
+                        max_length=200,
+                        verbose_name='ед. изм.',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'ингридиент',
@@ -38,12 +66,55 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Recipe',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='название рецепта', max_length=200, verbose_name='имя')),
-                ('text', models.TextField(help_text='пошаговое описание процесса приготовления', verbose_name='описание')),
-                ('cooking_time', models.PositiveIntegerField(help_text='укажите время приготовления (в минутах)', validators=[django.core.validators.MinValueValidator(1)], verbose_name='время приготовления')),
-                ('image', models.ImageField(blank=True, help_text='добавьте картинку к рецепту', upload_to='recipes/', verbose_name='картинка')),
-                ('pub_date', models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(
+                        help_text='название рецепта',
+                        max_length=200,
+                        verbose_name='имя',
+                    ),
+                ),
+                (
+                    'text',
+                    models.TextField(
+                        help_text='пошаговое описание процесса приготовления',
+                        verbose_name='описание',
+                    ),
+                ),
+                (
+                    'cooking_time',
+                    models.PositiveIntegerField(
+                        help_text='укажите время приготовления (в минутах)',
+                        validators=[
+                            django.core.validators.MinValueValidator(1)
+                        ],
+                        verbose_name='время приготовления',
+                    ),
+                ),
+                (
+                    'image',
+                    models.ImageField(
+                        blank=True,
+                        help_text='добавьте картинку к рецепту',
+                        upload_to='recipes/',
+                        verbose_name='картинка',
+                    ),
+                ),
+                (
+                    'pub_date',
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name='Дата публикации'
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'рецепт',
@@ -54,8 +125,26 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RecipeIngrideint',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.PositiveIntegerField(default=1, help_text='количество ингридиентов для рецепта', validators=[django.core.validators.MinValueValidator(1)], verbose_name='количество ингридиентов')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'amount',
+                    models.PositiveIntegerField(
+                        default=1,
+                        help_text='количество ингридиентов для рецепта',
+                        validators=[
+                            django.core.validators.MinValueValidator(1)
+                        ],
+                        verbose_name='количество ингридиентов',
+                    ),
+                ),
             ],
             options={
                 'ordering': ['-amount'],
@@ -65,8 +154,23 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ShoppingList',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('recipes', models.ManyToManyField(help_text='рецепты в списке покупок', to='food.Recipe', verbose_name='рецепты')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'recipes',
+                    models.ManyToManyField(
+                        help_text='рецепты в списке покупок',
+                        to='food.Recipe',
+                        verbose_name='рецепты',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'список покупок',

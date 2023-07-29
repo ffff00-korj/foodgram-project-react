@@ -5,17 +5,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='Subscription',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'подписка',
@@ -25,10 +31,43 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Tag',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='название рецепта', max_length=200, verbose_name='имя')),
-                ('slug', models.SlugField(help_text='идентификатор тэга', max_length=200, unique=True, verbose_name='слаг')),
-                ('color', colorfield.fields.ColorField(default='#FFFFFF', help_text='цвет тега', image_field=None, max_length=18, samples=None, verbose_name='цвет')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(
+                        help_text='название рецепта',
+                        max_length=200,
+                        verbose_name='имя',
+                    ),
+                ),
+                (
+                    'slug',
+                    models.SlugField(
+                        help_text='идентификатор тэга',
+                        max_length=200,
+                        unique=True,
+                        verbose_name='слаг',
+                    ),
+                ),
+                (
+                    'color',
+                    colorfield.fields.ColorField(
+                        default='#FFFFFF',
+                        help_text='цвет тега',
+                        image_field=None,
+                        max_length=18,
+                        samples=None,
+                        verbose_name='цвет',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'тег',
