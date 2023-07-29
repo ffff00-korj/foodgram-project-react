@@ -1,21 +1,25 @@
+from typing import List, Union
+
+from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
+from django.utils.functional import cached_property
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, response, viewsets
+from rest_framework import generics, permissions, response, status, viewsets
 
 from api.serializers import (
     IngredientSerializer,
     RecipeCreateSerializer,
     RecipeSerializer,
+    ShoppingListSerializer,
     TagSerializer,
 )
-from food.models import Ingredient, Recipe, RecipeIngrideint
+from food.models import Ingredient, Recipe, RecipeIngrideint, ShoppingList
 from foodgram.utils import base64_file
 from gram.models import Tag
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
@@ -51,13 +55,49 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 
     pagination_class = None
 
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    permission_classes = (permissions.AllowAny,)
 
     pagination_class = None
 
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('name',)
+
+
+class ShoppingListCreateDelete(
+    generics.CreateAPIView,
+    generics.DestroyAPIView,
+    generics.GenericAPIView,
+):
+    serializer_class = ShoppingListSerializer
+
+    @cached_property
+    def _recipe(self) -> Recipe:
+        return get_object_or_404(Recipe, pk=self.kwargs.get('recipe_id'))
+
+    def get_object(self):
+        return get_object_or_404(
+            ShoppingList,
+            recipe=self._recipe,
+            user=self.request.user,
+        )
+
+    def create(self, request, *args, **kwargs):
+        if ShoppingList.objects.filter(
+            user=request.user, recipe=self._recipe,
+        ).exists():
+            return response.Response(
+                data={'detail': 'Рецепт уже в списке покупок'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        ShoppingList.objects.create(
+            user=request.user, recipe=self._recipe,
+        ).save()
+        return response.Response(status=status.HTTP_201_CREATED)
+
+    def get_queryset(self) -> Union[QuerySet, List]:
+        return self._recipe.shopping_list.all()

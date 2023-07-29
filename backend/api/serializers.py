@@ -2,9 +2,9 @@ from django.contrib.auth import get_user_model
 from djoser.conf import settings
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
-from rest_framework import serializers
+from rest_framework import serializers, validators
 
-from food.models import Ingredient, Recipe, RecipeIngrideint
+from food.models import Ingredient, Recipe, RecipeIngrideint, ShoppingList
 from gram.models import Tag
 
 User = get_user_model()
@@ -143,3 +143,25 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class ShoppingListSerializer(serializers.Serializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), required=False
+    )
+    recipe = serializers.PrimaryKeyRelatedField(
+        queryset=Recipe.objects.all(), required=False
+    )
+    validators = (
+        validators.UniqueTogetherValidator(
+            queryset=ShoppingList.objects.all(),
+            fields=('user', 'recipe'),
+            message='Этот рецепт уже есть в списке покупок',
+        ),
+    )
+
+    class Meta:
+        fields = (
+            'user',
+            'recipe',
+        )

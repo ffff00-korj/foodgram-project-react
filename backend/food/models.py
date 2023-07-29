@@ -115,15 +115,23 @@ class ShoppingList(models.Model):
         on_delete=models.CASCADE,
         help_text='пользователь, владелец списка покупок',
     )
-    recipes = models.ManyToManyField(
+    recipe = models.ForeignKey(
         Recipe,
         verbose_name='рецепты',
+        on_delete=models.CASCADE,
         help_text='рецепты в списке покупок',
     )
 
     class Meta:
+        default_related_name = 'shopping_list'
         verbose_name = 'список покупок'
         verbose_name_plural = 'списки покупок'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name='unique_user_recipe',
+            ),
+        ]
 
 
 class FavoriteRecipe(models.Model):
