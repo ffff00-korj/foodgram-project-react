@@ -2,6 +2,7 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from api.views import (
+    DownloadShoppingList,
     IngredientViewSet,
     RecipeViewSet,
     ShoppingListCreateDelete,
@@ -14,6 +15,7 @@ router.register('tags', TagViewSet)
 router.register('ingredients', IngredientViewSet)
 
 api = [
+    path('recipes/download_shopping_cart/', DownloadShoppingList),
     path(
         'recipes/<int:recipe_id>/shopping_cart/',
         ShoppingListCreateDelete.as_view(),
