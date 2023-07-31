@@ -73,11 +73,7 @@ class FavoriteRecipeAdmin(BaseAdmin):
     list_display = (
         'pk',
         'user',
-        '_recipes',
+        'recipe',
     )
-    list_editable = ('user',)
-    search_fields = ('user',)
-
-    @admin.display(description='рецепты')
-    def _recipes(self, obj):
-        return [recipes.name for recipes in obj.recipes.all()]
+    list_editable = ('user', 'recipe')
+    search_fields = ('user', 'recipe')

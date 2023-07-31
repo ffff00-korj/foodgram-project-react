@@ -6,6 +6,7 @@ from api.views import (
     IngredientViewSet,
     RecipeViewSet,
     ShoppingListCreateDelete,
+    FavoriteRecipeCreateDelete,
     TagViewSet,
 )
 
@@ -19,6 +20,10 @@ api = [
     path(
         'recipes/<int:recipe_id>/shopping_cart/',
         ShoppingListCreateDelete.as_view(),
+    ),
+    path(
+        'recipes/<int:recipe_id>/favorite/',
+        FavoriteRecipeCreateDelete.as_view(),
     ),
     path('auth/', include('djoser.urls.authtoken')),
     path('', include(router.urls)),

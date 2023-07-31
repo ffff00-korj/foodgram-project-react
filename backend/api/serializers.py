@@ -165,3 +165,25 @@ class ShoppingListSerializer(serializers.Serializer):
             'user',
             'recipe',
         )
+
+
+class FavoriteRecipeSerializer(serializers.Serializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), required=False
+    )
+    recipe = serializers.PrimaryKeyRelatedField(
+        queryset=Recipe.objects.all(), required=False
+    )
+    validators = (
+        validators.UniqueTogetherValidator(
+            queryset=ShoppingList.objects.all(),
+            fields=('user', 'recipe'),
+            message='Этот рецепт уже есть в избранном',
+        ),
+    )
+
+    class Meta:
+        fields = (
+            'user',
+            'recipe',
+        )

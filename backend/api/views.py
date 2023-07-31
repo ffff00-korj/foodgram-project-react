@@ -11,13 +11,20 @@ from rest_framework import generics, permissions, response, status, viewsets
 from api.filters import RecipeFilter
 from api.pagination import PageLimitPagination
 from api.serializers import (
+    FavoriteRecipeSerializer,
     IngredientSerializer,
     RecipeCreateSerializer,
     RecipeSerializer,
     ShoppingListSerializer,
     TagSerializer,
 )
-from food.models import Ingredient, Recipe, RecipeIngrideint, ShoppingList
+from food.models import (
+    FavoriteRecipe,
+    Ingredient,
+    Recipe,
+    RecipeIngrideint,
+    ShoppingList,
+)
 from foodgram.utils import base64_file
 from gram.models import Tag
 
@@ -34,7 +41,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         query_params = self.request.query_params
         if query_params.get('is_in_shopping_cart'):
             return self.queryset.filter(
-                id__in=self.request.user.shopping_list.values('recipe')
+                id__in=self.request.user.shopping_list.values('recipe'),
+            )
+        if query_params.get('is_favorited'):
+            return self.queryset.filter(
+                id__in=self.request.user.favorite.values('recipe'),
             )
         return self.queryset
 
@@ -137,3 +148,40 @@ def DownloadShoppingList(request):
         )
 
     return FileResponse(BytesIO(bytes(result, 'utf8')))
+
+
+class FavoriteRecipeCreateDelete(
+    generics.CreateAPIView,
+    generics.DestroyAPIView,
+    generics.GenericAPIView,
+):
+    serializer_class = FavoriteRecipeSerializer
+
+    @cached_property
+    def _recipe(self) -> Recipe:
+        return get_object_or_404(Recipe, pk=self.kwargs.get('recipe_id'))
+
+    def get_object(self):
+        return get_object_or_404(
+            ShoppingList,
+            recipe=self._recipe,
+            user=self.request.user,
+        )
+
+    def create(self, request, *args, **kwargs):
+        if FavoriteRecipe.objects.filter(
+            user=request.user,
+            recipe=self._recipe,
+        ).exists():
+            return response.Response(
+                data={'detail': 'Рецепт уже в списке покупок'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        FavoriteRecipe.objects.create(
+            user=request.user,
+            recipe=self._recipe,
+        ).save()
+        return response.Response(status=status.HTTP_201_CREATED)
+
+    def get_queryset(self) -> Union[QuerySet, List]:
+        return self._recipe.shopping_list.all()

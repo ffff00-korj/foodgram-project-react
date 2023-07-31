@@ -141,13 +141,14 @@ class FavoriteRecipe(models.Model):
         on_delete=models.CASCADE,
         help_text='пользователь, который отметил рецепт',
     )
-    recipes = models.ManyToManyField(
+    recipe = models.ForeignKey(
         Recipe,
         verbose_name='рецепты',
+        on_delete=models.CASCADE,
         help_text='отмеченные рецепты',
     )
 
     class Meta:
-        default_related_name = 'favorites'
+        default_related_name = 'favorite'
         verbose_name = 'избранный рецепт'
         verbose_name_plural = 'избранные рецепты'
