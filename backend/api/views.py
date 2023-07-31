@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, permissions, response, status, viewsets
+from api.pagination import PageLimitPagination
 
 from api.serializers import (
     IngredientSerializer,
@@ -23,6 +24,7 @@ from gram.models import Tag
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
+    pagination_class = PageLimitPagination
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
@@ -56,16 +58,12 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
-    pagination_class = None
-
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-
-    pagination_class = None
 
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('name',)
