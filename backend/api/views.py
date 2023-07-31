@@ -7,7 +7,14 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, permissions, response, status, viewsets
+from rest_framework import (
+    generics,
+    mixins,
+    permissions,
+    response,
+    status,
+    viewsets,
+)
 
 from api.filters import RecipeFilter
 from api.pagination import PageLimitPagination
@@ -16,6 +23,7 @@ from api.serializers import (
     IngredientSerializer,
     RecipeCreateSerializer,
     RecipeSerializer,
+    RecipeSubsriptionSerializer,
     ShoppingListSerializer,
     SubscriptionSerializer,
     TagSerializer,
@@ -120,14 +128,19 @@ class ShoppingListCreateDelete(
             recipe=self._recipe,
         ).exists():
             return response.Response(
-                data={'detail': 'Рецепт уже в списке покупок'},
+                data={'errors': 'Рецепт уже в списке покупок'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        ShoppingList.objects.create(
+        shopping_list = ShoppingList.objects.create(
             user=request.user,
             recipe=self._recipe,
-        ).save()
-        return response.Response(status=status.HTTP_201_CREATED)
+        )
+        shopping_list.save()
+        serializer = RecipeSubsriptionSerializer(shopping_list.recipe)
+        return response.Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
 
     def get_queryset(self) -> Union[QuerySet, List]:
         return self._recipe.shopping_list.all()
@@ -136,7 +149,7 @@ class ShoppingListCreateDelete(
 def DownloadShoppingList(request):
     ingredients = (
         RecipeIngrideint.objects.filter(
-            recipe__in=request.user.shopping_list.values_list('recipe')
+            recipe__in=request.user.shopping_list.values_list('recipe'),
         )
         .values(
             'ingredient',
@@ -178,20 +191,67 @@ class FavoriteRecipeCreateDelete(
             recipe=self._recipe,
         ).exists():
             return response.Response(
-                data={'detail': 'Рецепт уже в списке покупок'},
+                data={'errors': 'Рецепт уже в списке покупок'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        FavoriteRecipe.objects.create(
+        favorite = FavoriteRecipe.objects.create(
             user=request.user,
             recipe=self._recipe,
-        ).save()
-        return response.Response(status=status.HTTP_201_CREATED)
+        )
+        favorite.save()
+        serializer = RecipeSubsriptionSerializer(favorite.recipe)
+        return response.Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
 
     def get_queryset(self) -> Union[QuerySet, List]:
         return self._recipe.shopping_list.all()
 
 
-class SubscriptionViewSet(viewsets.ModelViewSet):
+class SubscriptionCreateDelete(
+    generics.CreateAPIView,
+    generics.DestroyAPIView,
+    generics.GenericAPIView,
+):
+    serializer_class = SubscriptionSerializer
+
+    @cached_property
+    def _author(self) -> User:
+        return get_object_or_404(User, pk=self.kwargs.get('user_id'))
+
+    def get_object(self):
+        return get_object_or_404(
+            Subscription,
+            author=self._author,
+            user=self.request.user,
+        )
+
+    def create(self, request, *args, **kwargs):
+        if Subscription.objects.filter(
+            user=request.user,
+            author=self._author,
+        ).exists():
+            return response.Response(
+                data={'errors': 'Вы уже подписаны на этого автора'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        subscription = Subscription.objects.create(
+            user=request.user,
+            author=self._author,
+        )
+        subscription.save()
+        serializer = self.serializer_class(subscription)
+        return response.Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
+
+    def get_queryset(self) -> Union[QuerySet, List]:
+        return self._recipe.shopping_list.all()
+
+
+class SubscriptionViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     queryset = Subscription.objects.all()
     pagination_class = PageLimitPagination
     serializer_class = SubscriptionSerializer

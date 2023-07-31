@@ -7,6 +7,7 @@ from api.views import (
     IngredientViewSet,
     RecipeViewSet,
     ShoppingListCreateDelete,
+    SubscriptionCreateDelete,
     SubscriptionViewSet,
     TagViewSet,
 )
@@ -29,10 +30,14 @@ api = [
         'recipes/<int:recipe_id>/favorite/',
         FavoriteRecipeCreateDelete.as_view(),
     ),
-    path('auth/', include('djoser.urls.authtoken')),
+    path(
+        'users/<int:user_id>/subscribe/',
+        SubscriptionCreateDelete.as_view(),
+    ),
     path('users/', include(subscriptions_router.urls)),
     path('', include(router.urls)),
     path('', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
 ]
 
 urlpatterns = [

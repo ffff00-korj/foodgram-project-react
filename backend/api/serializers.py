@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.utils.functional import cached_property
 from djoser.conf import settings
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
@@ -148,10 +147,12 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
 class ShoppingListSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), required=False
+        queryset=User.objects.all(),
+        required=False,
     )
     recipe = serializers.PrimaryKeyRelatedField(
-        queryset=Recipe.objects.all(), required=False
+        queryset=Recipe.objects.all(),
+        required=False,
     )
     validators = (
         validators.UniqueTogetherValidator(
@@ -170,10 +171,12 @@ class ShoppingListSerializer(serializers.Serializer):
 
 class FavoriteRecipeSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), required=False
+        queryset=User.objects.all(),
+        required=False,
     )
     recipe = serializers.PrimaryKeyRelatedField(
-        queryset=Recipe.objects.all(), required=False
+        queryset=Recipe.objects.all(),
+        required=False,
     )
     validators = (
         validators.UniqueTogetherValidator(
@@ -205,8 +208,14 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='author.email')
     id = serializers.EmailField(source='author.id')
     username = serializers.EmailField(source='author.username')
-    first_name = serializers.EmailField(source='author.first_name')
-    last_name = serializers.EmailField(source='author.last_name')
+    first_name = serializers.EmailField(
+        source='author.first_name',
+        read_only=True,
+    )
+    last_name = serializers.EmailField(
+        source='author.last_name',
+        read_only=True,
+    )
     recipes_count = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
@@ -221,23 +230,23 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             'last_name',
             'is_subscribed',
             'user',
-            'author',
-            'recipes_count',
             'recipes',
+            'recipes_count',
         )
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj.author).count()
 
     def get_recipes(self, obj):
-        recipes = Recipe.objects.filter(author=obj.author).values(
-            'id', 'name', 'image', 'cooking_time'
-        )
-        return [RecipeSubsriptionSerializer(recipe).data for recipe in recipes]
+        recipes = Recipe.objects.filter(author=obj.author)
+        request = self.context.get('request')
+        if request:
+            limit = request.query_params.get('recipes_limit')
+            if limit:
+                recipes = recipes.order_by('-id')[: int(limit)]
+        return RecipeSubsriptionSerializer(recipes, many=True).data
 
-    def get_is_subscribed(self, obj) -> bool:
-        return (
-            self.context.get('request')
-            .user.subscriber.filter(author=obj.author)
-            .exists()
-        )
+    def get_is_subscribed(self, subscribtion) -> bool:
+        return subscribtion.user.subscriber.filter(
+            author=subscribtion.author,
+        ).exists()
