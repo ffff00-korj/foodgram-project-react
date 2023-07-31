@@ -7,6 +7,7 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django_filters.rest_framework import DjangoFilterBackend
+from api.filters import RecipeFilter
 from rest_framework import generics, permissions, response, status, viewsets
 from api.pagination import PageLimitPagination
 
@@ -25,6 +26,10 @@ from gram.models import Tag
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     pagination_class = PageLimitPagination
+
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RecipeFilter
+    filterset_fields = ('author', 'tags')
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
