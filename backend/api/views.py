@@ -1,16 +1,15 @@
 from io import BytesIO
 from typing import List, Union
-from django.db.models import Sum
 
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Sum
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django_filters.rest_framework import DjangoFilterBackend
-from api.filters import RecipeFilter
 from rest_framework import generics, permissions, response, status, viewsets
-from api.pagination import PageLimitPagination
 
+from api.filters import RecipeFilter
+from api.pagination import PageLimitPagination
 from api.serializers import (
     IngredientSerializer,
     RecipeCreateSerializer,
@@ -30,6 +29,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     filterset_fields = ('author', 'tags')
+
+    def get_queryset(self):
+        query_params = self.request.query_params
+        if query_params.get('is_in_shopping_cart'):
+            return self.queryset.filter(
+                id__in=self.request.user.shopping_list.values('recipe')
+            )
+        return self.queryset
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
