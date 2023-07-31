@@ -3,10 +3,11 @@ from rest_framework.routers import DefaultRouter
 
 from api.views import (
     DownloadShoppingList,
+    FavoriteRecipeCreateDelete,
     IngredientViewSet,
     RecipeViewSet,
     ShoppingListCreateDelete,
-    FavoriteRecipeCreateDelete,
+    SubscriptionViewSet,
     TagViewSet,
 )
 
@@ -14,6 +15,9 @@ router = DefaultRouter()
 router.register('recipes', RecipeViewSet)
 router.register('tags', TagViewSet)
 router.register('ingredients', IngredientViewSet)
+
+subscriptions_router = DefaultRouter()
+subscriptions_router.register('subscriptions', SubscriptionViewSet)
 
 api = [
     path('recipes/download_shopping_cart/', DownloadShoppingList),
@@ -26,6 +30,7 @@ api = [
         FavoriteRecipeCreateDelete.as_view(),
     ),
     path('auth/', include('djoser.urls.authtoken')),
+    path('users/', include(subscriptions_router.urls)),
     path('', include(router.urls)),
     path('', include('djoser.urls')),
 ]

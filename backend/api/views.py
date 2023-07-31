@@ -1,6 +1,7 @@
 from io import BytesIO
 from typing import List, Union
 
+from django.contrib.auth import get_user_model
 from django.db.models import QuerySet, Sum
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
@@ -16,6 +17,7 @@ from api.serializers import (
     RecipeCreateSerializer,
     RecipeSerializer,
     ShoppingListSerializer,
+    SubscriptionSerializer,
     TagSerializer,
 )
 from food.models import (
@@ -26,7 +28,9 @@ from food.models import (
     ShoppingList,
 )
 from foodgram.utils import base64_file
-from gram.models import Tag
+from gram.models import Subscription, Tag
+
+User = get_user_model()
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -185,3 +189,12 @@ class FavoriteRecipeCreateDelete(
 
     def get_queryset(self) -> Union[QuerySet, List]:
         return self._recipe.shopping_list.all()
+
+
+class SubscriptionViewSet(viewsets.ModelViewSet):
+    queryset = Subscription.objects.all()
+    pagination_class = PageLimitPagination
+    serializer_class = SubscriptionSerializer
+
+    def get_queryset(self):
+        return self.request.user.subscriber.all()

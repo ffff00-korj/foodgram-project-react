@@ -1,11 +1,12 @@
 from django.contrib.auth import get_user_model
+from django.utils.functional import cached_property
 from djoser.conf import settings
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers, validators
 
 from food.models import Ingredient, Recipe, RecipeIngrideint, ShoppingList
-from gram.models import Tag
+from gram.models import Subscription, Tag
 
 User = get_user_model()
 
@@ -186,4 +187,57 @@ class FavoriteRecipeSerializer(serializers.Serializer):
         fields = (
             'user',
             'recipe',
+        )
+
+
+class RecipeSubsriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = (
+            'id',
+            'name',
+            'image',
+            'cooking_time',
+        )
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='author.email')
+    id = serializers.EmailField(source='author.id')
+    username = serializers.EmailField(source='author.username')
+    first_name = serializers.EmailField(source='author.first_name')
+    last_name = serializers.EmailField(source='author.last_name')
+    recipes_count = serializers.SerializerMethodField()
+    recipes = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Subscription
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'user',
+            'author',
+            'recipes_count',
+            'recipes',
+        )
+
+    def get_recipes_count(self, obj):
+        return Recipe.objects.filter(author=obj.author).count()
+
+    def get_recipes(self, obj):
+        recipes = Recipe.objects.filter(author=obj.author).values(
+            'id', 'name', 'image', 'cooking_time'
+        )
+        return [RecipeSubsriptionSerializer(recipe).data for recipe in recipes]
+
+    def get_is_subscribed(self, obj) -> bool:
+        return (
+            self.context.get('request')
+            .user.subscriber.filter(author=obj.author)
+            .exists()
         )
