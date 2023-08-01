@@ -141,9 +141,6 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             'cooking_time',
         )
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
 
 class ShoppingListSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(

@@ -21,22 +21,22 @@ subscriptions_router = DefaultRouter()
 subscriptions_router.register('subscriptions', SubscriptionViewSet)
 
 api = [
-    path('', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
     path('recipes/download_shopping_cart/', DownloadShoppingList),
     path(
         'recipes/<int:recipe_id>/shopping_cart/',
         ShoppingListCreateDelete.as_view(),
     ),
-    path(
-        'recipes/<int:recipe_id>/favorite/',
-        FavoriteRecipeCreateDelete.as_view(),
-    ),
+    path('', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
     path(
         'users/<int:user_id>/subscribe/',
         SubscriptionCreateDelete.as_view(),
     ),
     path('users/', include(subscriptions_router.urls)),
+    path(
+        'recipes/<int:recipe_id>/favorite/',
+        FavoriteRecipeCreateDelete.as_view(),
+    ),
     path('', include(router.urls)),
 ]
 

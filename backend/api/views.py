@@ -45,6 +45,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     pagination_class = PageLimitPagination
 
+    serializer_class = RecipeCreateSerializer
+
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     filterset_fields = ('author', 'tags')
@@ -71,7 +73,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = Recipe.objects.create(
             name=data['name'],
             cooking_time=data['cooking_time'],
-            author=self.request.user,
+            author=request.user,
             image=base64_file(data['image']),
             text=data['text'],
         )
@@ -99,6 +101,8 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+
+    permission_classes = (permissions.AllowAny,)
 
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('name',)
