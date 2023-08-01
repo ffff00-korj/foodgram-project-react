@@ -151,17 +151,19 @@ def DownloadShoppingList(request):
         RecipeIngrideint.objects.filter(
             recipe__in=request.user.shopping_list.values_list('recipe'),
         )
+        .select_related('recipes')
         .values(
-            'ingredient',
+            'ingredient__name',
+            'ingredient__measurement_unit',
         )
-        .annotate(Sum('amount'))
+        .annotate(amount=Sum('amount'))
     )
     result = ''
     for row in ingredients:
         result += (
             f'* {row.get("ingredient__name")} '
             f'({row.get("ingredient__measurement_unit")}) '
-            f'- {row.get("amount__sum")}\n'
+            f'- {row.get("amount")}\n'
         )
 
     return FileResponse(BytesIO(bytes(result, 'utf8')))
