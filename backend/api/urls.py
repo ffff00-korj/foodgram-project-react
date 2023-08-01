@@ -21,6 +21,8 @@ subscriptions_router = DefaultRouter()
 subscriptions_router.register('subscriptions', SubscriptionViewSet)
 
 api = [
+    path('', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
     path('recipes/download_shopping_cart/', DownloadShoppingList),
     path(
         'recipes/<int:recipe_id>/shopping_cart/',
@@ -36,8 +38,6 @@ api = [
     ),
     path('users/', include(subscriptions_router.urls)),
     path('', include(router.urls)),
-    path('', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
 ]
 
 urlpatterns = [
