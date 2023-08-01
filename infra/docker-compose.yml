@@ -30,6 +30,8 @@ services:
     depends_on:
       - backend
   nginx:
+    build:
+      dockerfile: Dockerfile
     image: nginx:1.19.3
     ports:
       - "80:80"
