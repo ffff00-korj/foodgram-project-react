@@ -1,4 +1,5 @@
 import base64
+from typing import Union
 
 from django.conf import settings
 from django.core.files.base import ContentFile
@@ -20,7 +21,7 @@ def set_title_from_text(
     return text[:length] + '...' if len(text) > length else text
 
 
-def base64_file(data: str, name: str = None) -> ContentFile:
+def base64_file(data: str, name: Union[str, None] = None) -> ContentFile:
     """Конвертирует base64-строку в файл.
 
     Args:

@@ -47,10 +47,10 @@ class UserSerializer(serializers.ModelSerializer):
             'is_subscribed',
         )
 
-    def get_is_subscribed(self, user: User) -> bool:
+    def get_is_subscribed(self, author) -> bool:
         return (
             self.context.get('request')
-            .user.subscriber.filter(author=user)
+            .user.subscriber.filter(author=author)
             .exists()
         )
 
@@ -92,6 +92,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = serializers.SerializerMethodField()
     author = UserSerializer()
     image = Base64ImageField()
+    is_favorited = serializers.SerializerMethodField(read_only=True)
+    is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Recipe
@@ -103,6 +105,8 @@ class RecipeSerializer(serializers.ModelSerializer):
             'text',
             'tags',
             'ingredients',
+            'is_in_shopping_cart',
+            'is_favorited',
             'cooking_time',
         )
 
@@ -120,6 +124,16 @@ class RecipeSerializer(serializers.ModelSerializer):
                 },
             )
         return result
+
+    @property
+    def _user(self):
+        return self.context.get('request').user
+
+    def get_is_favorited(self, recipe) -> bool:
+        return self._user.favorite.filter(recipe=recipe).exists()
+
+    def get_is_in_shopping_cart(self, recipe) -> bool:
+        return self._user.shopping_list.filter(recipe=recipe).exists()
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):

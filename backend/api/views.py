@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (
+    filters,
     generics,
     mixins,
     permissions,
@@ -104,9 +105,10 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
     permission_classes = (permissions.AllowAny,)
 
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filterset_class = IngredientFilter
     filterset_fields = ('name',)
+    ordering_fields = ('name',)
 
 
 class ShoppingListCreateDelete(
@@ -187,7 +189,7 @@ class FavoriteRecipeCreateDelete(
 
     def get_object(self):
         return get_object_or_404(
-            ShoppingList,
+            FavoriteRecipe,
             recipe=self._recipe,
             user=self.request.user,
         )
@@ -224,7 +226,7 @@ class SubscriptionCreateDelete(
     serializer_class = SubscriptionSerializer
 
     @cached_property
-    def _author(self) -> User:
+    def _author(self):
         return get_object_or_404(User, pk=self.kwargs.get('user_id'))
 
     def get_object(self):
