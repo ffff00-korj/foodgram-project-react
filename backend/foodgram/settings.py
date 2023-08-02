@@ -136,7 +136,6 @@ DJOSER = {
         'current_user': 'api.serializers.UserSerializer',
         'user': 'api.serializers.UserSerializer',
     },
-    # 'HIDE_USERS': False,
 }
 
 AUTH_USER_MODEL = 'users.User'

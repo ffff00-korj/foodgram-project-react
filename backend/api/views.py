@@ -1,6 +1,6 @@
 from io import BytesIO
 from typing import List, Union
-
+from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet, Sum
 from django.http import FileResponse
@@ -153,6 +153,7 @@ class ShoppingListCreateDelete(
         return self._recipe.shopping_list.all()
 
 
+@api_view(['GET'])
 def DownloadShoppingList(request):
     ingredients = (
         RecipeIngrideint.objects.filter(
