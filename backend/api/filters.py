@@ -4,7 +4,7 @@ from food.models import Ingredient, Recipe
 
 
 class RecipeFilter(django_filters.FilterSet):
-    tags = django_filters.CharFilter(field_name='tags__slug')
+    tags = django_filters.AllValuesMultipleFilter(field_name='tags__slug')
 
     class Meta:
         model = Recipe
