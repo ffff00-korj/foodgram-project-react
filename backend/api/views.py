@@ -16,7 +16,7 @@ from rest_framework import (
     viewsets,
 )
 
-from api.filters import RecipeFilter
+from api.filters import IngredientFilter, RecipeFilter
 from api.pagination import PageLimitPagination
 from api.serializers import (
     FavoriteRecipeSerializer,
@@ -91,7 +91,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return response.Response(self.serializer_class(recipe).data)
 
 
-class TagViewSet(viewsets.ReadOnlyModelViewSet):
+class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
@@ -105,6 +105,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
     filter_backends = (DjangoFilterBackend,)
+    filterset_class = IngredientFilter
     filterset_fields = ('name',)
 
 

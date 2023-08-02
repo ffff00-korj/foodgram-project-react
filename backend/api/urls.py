@@ -26,8 +26,6 @@ api = [
         'recipes/<int:recipe_id>/shopping_cart/',
         ShoppingListCreateDelete.as_view(),
     ),
-    path('', include('djoser.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
     path(
         'users/<int:user_id>/subscribe/',
         SubscriptionCreateDelete.as_view(),
@@ -38,6 +36,8 @@ api = [
         FavoriteRecipeCreateDelete.as_view(),
     ),
     path('', include(router.urls)),
+    path('', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
 ]
 
 urlpatterns = [

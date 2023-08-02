@@ -1,6 +1,6 @@
 import django_filters
 
-from food.models import Recipe
+from food.models import Ingredient, Recipe
 
 
 class RecipeFilter(django_filters.FilterSet):
@@ -9,3 +9,11 @@ class RecipeFilter(django_filters.FilterSet):
     class Meta:
         model = Recipe
         fields = ('author', 'tags')
+
+
+class IngredientFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Ingredient
+        fields = ('name',)
