@@ -25,4 +25,8 @@ per-file-ignores = ['*/settings.py: E501',]
 max-complexity = 10
 
 [tool.mypy]
+python_version = "3.9"
 ignore_missing_imports = true
+exclude = [
+    '/migrations/',
+]
