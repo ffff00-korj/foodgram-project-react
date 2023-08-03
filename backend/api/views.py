@@ -10,7 +10,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (
     filters,
     generics,
-    mixins,
+    views,
     permissions,
     response,
     status,
@@ -219,11 +219,7 @@ class FavoriteRecipeCreateDelete(
         return self._recipe.shopping_list.all()
 
 
-class SubscriptionCreateDelete(
-    generics.CreateAPIView,
-    generics.DestroyAPIView,
-    generics.GenericAPIView,
-):
+class SubscriptionCreateDelete(views.APIView):
     serializer_class = SubscriptionSerializer
 
     @cached_property
@@ -261,7 +257,7 @@ class SubscriptionCreateDelete(
         return self._recipe.shopping_list.all()
 
 
-class SubscriptionViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+class SubscriptionList(generics.ListAPIView):
     queryset = Subscription.objects.all()
     pagination_class = PageLimitPagination
     serializer_class = SubscriptionSerializer

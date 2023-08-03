@@ -8,7 +8,7 @@ from api.views import (
     RecipeViewSet,
     ShoppingListCreateDelete,
     SubscriptionCreateDelete,
-    SubscriptionViewSet,
+    SubscriptionList,
     TagViewSet,
 )
 
@@ -17,8 +17,6 @@ router.register('recipes', RecipeViewSet)
 router.register('tags', TagViewSet)
 router.register('ingredients', IngredientViewSet)
 
-subscriptions_router = DefaultRouter()
-subscriptions_router.register('subscriptions', SubscriptionViewSet)
 
 api = [
     path('recipes/download_shopping_cart/', DownloadShoppingList),
@@ -34,7 +32,10 @@ api = [
         'users/<int:user_id>/subscribe/',
         SubscriptionCreateDelete.as_view(),
     ),
-    path('users/', include(subscriptions_router.urls)),
+    path(
+        'users/subscriptions/',
+        SubscriptionList.as_view(),
+    ),
     path('', include(router.urls)),
     path('', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
