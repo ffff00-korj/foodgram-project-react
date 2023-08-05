@@ -1,6 +1,6 @@
 from io import BytesIO
 from typing import List, Union
-from rest_framework.decorators import api_view
+
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet, Sum
 from django.http import FileResponse
@@ -10,12 +10,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (
     filters,
     generics,
-    views,
     permissions,
     response,
     status,
+    views,
     viewsets,
 )
+from rest_framework.decorators import api_view
 
 from api.filters import IngredientFilter, RecipeFilter
 from api.pagination import PageLimitPagination
@@ -29,6 +30,7 @@ from api.serializers import (
     SubscriptionSerializer,
     TagSerializer,
 )
+from foodgram.utils import base64_file
 from recipe.models import (
     FavoriteRecipe,
     Ingredient,
@@ -38,7 +40,6 @@ from recipe.models import (
     Subscription,
     Tag,
 )
-from foodgram.utils import base64_file
 
 User = get_user_model()
 

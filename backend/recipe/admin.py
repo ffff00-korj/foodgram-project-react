@@ -2,16 +2,16 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
+from foodgram.admin import BaseAdmin
 from recipe.models import (
     FavoriteRecipe,
     Ingredient,
     Recipe,
     RecipeIngrideint,
     ShoppingList,
-    Tag,
     Subscription,
+    Tag,
 )
-from foodgram.admin import BaseAdmin
 
 
 class RecipeIngrideintInline(admin.TabularInline):
