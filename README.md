@@ -34,7 +34,7 @@ git clone https://github.com/ffff00-korj/foodgram-project-react.git
 
 2. Создайте файл .env с переменными окружения:
 
-```txt
+```env
 DEBUG=0
 DB_NAME=your_db_name
 POSTGRES_USER=your_db_user
