@@ -5,15 +5,18 @@ from django.db import models
 
 User = get_user_model()
 
+MAX_CHAR_LENGTH = 200
+MAX_COLOR_LENGTH = 7
+
 
 class Ingredient(models.Model):
     name = models.CharField(
-        max_length=200,
+        max_length=MAX_CHAR_LENGTH,
         verbose_name='имя',
         help_text='название ингридиета',
     )
     measurement_unit = models.CharField(
-        max_length=200,
+        max_length=MAX_CHAR_LENGTH,
         verbose_name='ед. изм.',
         help_text='единица изменения (например грамм)',
     )
@@ -21,6 +24,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'ингридиент'
         verbose_name_plural = 'ингридиенты'
+        ordering = ('name',)
 
     def __str__(self) -> str:
         return self.name
@@ -28,17 +32,18 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(
-        max_length=200,
+        max_length=MAX_CHAR_LENGTH,
         verbose_name='имя',
         help_text='название рецепта',
     )
     slug = models.SlugField(
-        max_length=200,
+        max_length=MAX_CHAR_LENGTH,
         unique=True,
         verbose_name='слаг',
         help_text='идентификатор тэга',
     )
     color = ColorField(
+        max_length=MAX_COLOR_LENGTH,
         verbose_name='цвет',
         help_text='цвет тега',
     )
@@ -54,7 +59,7 @@ class Tag(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(
-        max_length=200,
+        max_length=MAX_CHAR_LENGTH,
         verbose_name='имя',
         help_text='название рецепта',
     )
@@ -97,7 +102,7 @@ class Recipe(models.Model):
     class Meta:
         verbose_name = 'рецепт'
         verbose_name_plural = 'рецепты'
-        ordering = ['-pub_date']
+        ordering = ('-pub_date',)
 
     def __str__(self) -> str:
         return self.name
@@ -108,12 +113,14 @@ class RecipeIngrideint(models.Model):
         Recipe,
         related_name='ingrideints',
         verbose_name='рецепт',
+        help_text='рецепт, к которому относится ингредиент',
         on_delete=models.CASCADE,
     )
     ingredient = models.ForeignKey(
         Ingredient,
         related_name='recipes',
         verbose_name='ингридиент',
+        help_text='ингредиет рецепта',
         on_delete=models.CASCADE,
     )
     amount = models.PositiveIntegerField(
@@ -124,13 +131,18 @@ class RecipeIngrideint(models.Model):
     )
 
     class Meta:
-        ordering = ['-amount']
+        verbose_name = 'ингредиент рецепта'
+        verbose_name_plural = 'ингредиенты рецептов'
+        ordering = ('-amount',)
         constraints = [
             models.UniqueConstraint(
                 fields=['recipe', 'ingredient'],
                 name='unique_recipe_ingredient',
             ),
         ]
+
+    def __str__(self):
+        return f'{str(self.ingredient)} ({str(self.recipe)})'
 
 
 class ShoppingList(models.Model):
@@ -158,6 +170,9 @@ class ShoppingList(models.Model):
             ),
         ]
 
+    def __str__(self):
+        return f'{str(self.recipe)} ({str(self.user)})'
+
 
 class FavoriteRecipe(models.Model):
     user = models.ForeignKey(
@@ -177,6 +192,9 @@ class FavoriteRecipe(models.Model):
         default_related_name = 'favorite'
         verbose_name = 'избранный рецепт'
         verbose_name_plural = 'избранные рецепты'
+
+    def __str__(self):
+        return f'{str(self.recipe)} ({str(self.user)})'
 
 
 class Subscription(models.Model):
@@ -198,6 +216,7 @@ class Subscription(models.Model):
     class Meta:
         verbose_name = 'подписка'
         verbose_name_plural = 'подписки'
+        ordering = ('user',)
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'author'],
@@ -208,3 +227,6 @@ class Subscription(models.Model):
                 name='no_selt_sub',
             ),
         ]
+
+    def __str__(self):
+        return f'{str(self.user)} ({str(self.author)})'

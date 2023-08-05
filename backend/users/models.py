@@ -14,3 +14,8 @@ class User(AbstractUser):
         unique=True,
         help_text='электронная почта пользователя',
     )
+
+    class Meta:
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
+        ordering = ('username',)
