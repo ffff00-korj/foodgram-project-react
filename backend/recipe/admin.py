@@ -2,12 +2,14 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-from food.models import (
+from recipe.models import (
     FavoriteRecipe,
     Ingredient,
     Recipe,
     RecipeIngrideint,
     ShoppingList,
+    Tag,
+    Subscription,
 )
 from foodgram.admin import BaseAdmin
 
@@ -77,3 +79,21 @@ class FavoriteRecipeAdmin(BaseAdmin):
     )
     list_editable = ('user', 'recipe')
     search_fields = ('user', 'recipe')
+
+
+@admin.register(Tag)
+class TagAdmin(BaseAdmin):
+    list_display = ('name', 'slug', 'color')
+    list_editable = ('slug',)
+    search_fields = ('slug',)
+
+
+@admin.register(Subscription)
+class SubscriptionAdmin(BaseAdmin):
+    list_display = (
+        'pk',
+        'user',
+        'author',
+    )
+    list_editable = ('user', 'author')
+    search_fields = ('user', 'author')

@@ -4,8 +4,7 @@ from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers, validators
 
-from food.models import Ingredient, Recipe, RecipeIngrideint, ShoppingList
-from gram.models import Subscription, Tag
+from recipe.models import Ingredient, Recipe, RecipeIngrideint, ShoppingList, Subscription, Tag
 
 User = get_user_model()
 

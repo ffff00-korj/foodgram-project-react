@@ -30,8 +30,7 @@ INSTALLED_APPS = [
     'import_export',
 
     'api',
-    'food',
-    'gram',
+    'recipe',
     'users',
 ]
 # fmt: on

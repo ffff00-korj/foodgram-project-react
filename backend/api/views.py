@@ -29,15 +29,16 @@ from api.serializers import (
     SubscriptionSerializer,
     TagSerializer,
 )
-from food.models import (
+from recipe.models import (
     FavoriteRecipe,
     Ingredient,
     Recipe,
     RecipeIngrideint,
     ShoppingList,
+    Subscription,
+    Tag,
 )
 from foodgram.utils import base64_file
-from gram.models import Subscription, Tag
 
 User = get_user_model()
 
