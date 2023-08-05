@@ -27,49 +27,51 @@ Foodgram - это социальная платформа для любител�
 1. Склонируйте репозиторий:
 
 
+```txt
 git clone https://github.com/ffff00-korj/foodgram-project-react.git
+```
 
 
 2. Создайте файл .env с переменными окружения:
 
-
+```txt
 DEBUG=0
 DB_NAME=your_db_name
 POSTGRES_USER=your_db_user
 POSTGRES_PASSWORD=your_db_password
 DB_HOST=db
 DB_PORT=5432
-
+```
 
 3. Перейдите в каталог infra
 
-
+```bash
 cd infra/
-
+```
 
 3. Запустите приложение с помощью docker-compose:
 
-
+```bash
 docker-compose up -d --build
-
+```
 
 4. Примените миграции:
 
-
+```bash
 docker-compose exec backend python manage.py migrate --noinput
-
+```
 
 5. Создайте суперпользователя:
 
-
+```bash
 docker-compose exec backend python manage.py createsuperuser
-
+```
 
 6. Откройте приложение в браузере:
 
-
+```bash
 http://localhost/
-
+```
 
 ## Авторы
 
