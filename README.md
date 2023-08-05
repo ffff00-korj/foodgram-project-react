@@ -18,7 +18,7 @@ Foodgram - это социальная платформа для любител�
 
 - Python 3.9.11
 - Django 3.2
-- Django REST framework 3.14.0
+- Django REST framework 3.14
 - PostgreSQL 13
 - Docker
 
@@ -35,12 +35,18 @@ git clone https://github.com/ffff00-korj/foodgram-project-react.git
 2. Создайте файл .env с переменными окружения:
 
 ```env
-DEBUG=0
-DB_NAME=your_db_name
-POSTGRES_USER=your_db_user
-POSTGRES_PASSWORD=your_db_password
+DJANGO_SECRET_KEY='django-insecure-802o==dsajkldjk#@$&()*GOIhno32RH{F*()FH)@*(#:2'
+DJANGO_DEBUG=1
+DJANGO_ALLOWED_HOSTS='127.0.0.1 0.0.0.0 localhost'
+
 DB_HOST=db
 DB_PORT=5432
+
+POSTGRES_USER=foodgram_user
+POSTGRES_PASSWORD=foodgram
+POSTGRES_DB=foodgram
+
+SQLITE_ENGINE=0
 ```
 
 3. Перейдите в каталог infra
