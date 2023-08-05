@@ -1,7 +1,7 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-from django.utils.safestring import mark_safe
 
 from recipe.models import (
     FavoriteRecipe,
@@ -67,8 +67,9 @@ class RecipeAdmin(admin.ModelAdmin):
 
     @admin.display(description='картинка')
     def _image(self, recipe):
-        return mark_safe(f'<img src={recipe.image.url} '
-                         'width="80" height="60">')
+        return mark_safe(
+            f'<img src={recipe.image.url} ' 'width="80" height="60">',
+        )
 
 
 @admin.register(ShoppingList)

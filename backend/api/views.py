@@ -1,7 +1,6 @@
 from io import BytesIO
 from typing import List, Union
 
-from django.contrib.auth import get_user_model
 from django.db.models import QuerySet, Sum
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
@@ -39,58 +38,20 @@ from recipe.models import (
     Subscription,
     Tag,
 )
-
-User = get_user_model()
+from users.models import User
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     pagination_class = PageLimitPagination
-
     serializer_class = RecipeCreateSerializer
-
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
-    filterset_fields = ('author', 'tags')
-
-    def get_queryset(self):
-        query_params = self.request.query_params
-        if query_params.get('is_in_shopping_cart'):
-            return self.queryset.filter(
-                id__in=self.request.user.shopping_list.values('recipe'),
-            )
-        if query_params.get('is_favorited'):
-            return self.queryset.filter(
-                id__in=self.request.user.favorite.values('recipe'),
-            )
-        return self.queryset
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
             return RecipeSerializer
         return RecipeCreateSerializer
-
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        recipe = Recipe.objects.create(
-            name=data['name'],
-            cooking_time=data['cooking_time'],
-            author=request.user,
-            image=data['image'],
-            text=data['text'],
-        )
-        recipe.save()
-        for ingredients in data['ingredients']:
-            RecipeIngrideint.objects.create(
-                recipe=recipe,
-                ingredient=get_object_or_404(Ingredient, pk=ingredients['id']),
-                amount=ingredients['amount'],
-            ).save()
-
-        for tag_id in data['tags']:
-            recipe.tags.add(get_object_or_404(Tag, pk=tag_id))
-
-        return response.Response(self.serializer_class(recipe).data)
 
 
 class TagViewSet(viewsets.ModelViewSet):
