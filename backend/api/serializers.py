@@ -3,6 +3,7 @@ from rest_framework import serializers, validators
 
 from recipe import constants
 from recipe.models import (
+    FavoriteRecipe,
     Ingredient,
     Recipe,
     RecipeIngrideint,
@@ -224,8 +225,9 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class ShoppingListSerializer(serializers.Serializer):
+class ShoppingListSerializer(serializers.ModelSerializer):
     class Meta:
+        model = ShoppingList
         fields = (
             'user',
             'recipe',
@@ -239,8 +241,9 @@ class ShoppingListSerializer(serializers.Serializer):
         )
 
 
-class FavoriteRecipeSerializer(serializers.Serializer):
+class FavoriteRecipeSerializer(serializers.ModelSerializer):
     class Meta:
+        model = FavoriteRecipe
         fields = (
             'user',
             'recipe',
@@ -265,24 +268,13 @@ class RecipeSubsriptionSerializer(serializers.ModelSerializer):
         )
 
 
-class SubscriptionSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(source='author.email')
-    id = serializers.EmailField(source='author.id')
-    username = serializers.EmailField(source='author.username')
-    first_name = serializers.EmailField(
-        source='author.first_name',
-        read_only=True,
-    )
-    last_name = serializers.EmailField(
-        source='author.last_name',
-        read_only=True,
-    )
+class SubscriptionListSerializer(UserSerializer):
     recipes_count = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
-        model = Subscription
+        model = User
         fields = (
             'email',
             'id',
@@ -290,16 +282,15 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'is_subscribed',
-            'user',
             'recipes',
             'recipes_count',
         )
 
-    def get_recipes_count(self, obj):
-        return obj.author.recipes.count()
+    def get_recipes_count(self, author):
+        return author.recipes.count()
 
-    def get_recipes(self, obj):
-        recipes = obj.author.recipes
+    def get_recipes(self, author):
+        recipes = author.recipes.all()
         request = self.context.get('request')
         if request:
             limit = request.query_params.get('recipes_limit')
@@ -307,7 +298,25 @@ class SubscriptionSerializer(serializers.ModelSerializer):
                 recipes = recipes[: int(limit)]
         return RecipeSubsriptionSerializer(recipes, many=True).data
 
-    def get_is_subscribed(self, subscribtion) -> bool:
-        return subscribtion.user.subscriber.filter(
-            author=subscribtion.author,
-        ).exists()
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = ('user', 'author')
+
+    def validate(self, attrs):
+        if (
+            attrs.get('user')
+            .subscribed.filter(author=attrs.get('author'))
+            .exists()
+        ):
+            raise serializers.ValidationError(
+                'Вы уже подписаны на этого автора.',
+            )
+        return attrs
+
+    def to_representation(self, subscription):
+        return SubscriptionListSerializer(
+            subscription.author,
+            context={'request': self.context.get('request')},
+        ).data
