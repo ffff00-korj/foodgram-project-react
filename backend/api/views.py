@@ -14,7 +14,7 @@ from rest_framework.decorators import action
 
 from users.models import User
 from api.filters import IngredientFilter, RecipeFilter
-from api.pagination import PageLimitPagination, RecipeLimitPagination
+from api.pagination import PageLimitPagination
 from api.serializers import (
     FavoriteRecipeSerializer,
     IngredientSerializer,
@@ -158,7 +158,7 @@ class SubscriptionCreateDelete(views.APIView):
 
 
 class SubscriptionList(generics.ListAPIView):
-    pagination_class = RecipeLimitPagination
+    pagination_class = PageLimitPagination
     serializer_class = SubscriptionListSerializer
 
     def get_queryset(self):
