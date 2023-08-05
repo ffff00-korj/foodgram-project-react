@@ -74,6 +74,10 @@ class RecipeIngredientSerializer(serializers.Serializer):
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
     """Ингридиенты рецептов и их количество."""
+    id = serializers.ReadOnlyField(source='ingredient.id')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit')
+    name = serializers.ReadOnlyField(source='ingredient.name')
 
     class Meta:
         model = RecipeIngrideint
@@ -85,9 +89,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     """Serializer получения рецептов."""
 
     tags = TagSerializer(many=True)
-    # ingredients = IngredientRecipeSerializer(
-    #     source='ingrideints', many=True)
-    ingredients = serializers.SerializerMethodField()
+    ingredients = IngredientRecipeSerializer(
+        source='ingrideints', many=True)
     author = UserSerializer()
     image = Base64ImageField()
     is_favorited = serializers.SerializerMethodField(read_only=True)
@@ -107,21 +110,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             'is_favorited',
             'cooking_time',
         )
-
-    def get_ingredients(self, recipe):
-        result = []
-        for row in RecipeIngrideint.objects.filter(
-            recipe=recipe,
-        ).select_related('ingredient'):
-            result.append(
-                {
-                    'id': row.ingredient.pk,
-                    'name': row.ingredient.name,
-                    'measurement_unit': row.ingredient.measurement_unit,
-                    'amount': row.amount,
-                },
-            )
-        return result
 
     def get_is_favorited(self, recipe) -> bool:
         request = self.context.get('request')
