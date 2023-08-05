@@ -3,8 +3,6 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from foodgram.utils import set_title_from_text
-
 User = get_user_model()
 
 
@@ -25,7 +23,7 @@ class Ingredient(models.Model):
         verbose_name_plural = 'ингридиенты'
 
     def __str__(self) -> str:
-        return set_title_from_text(self.name)
+        return self.name
 
 
 class Tag(models.Model):
@@ -51,7 +49,7 @@ class Tag(models.Model):
         ordering = ['slug']
 
     def __str__(self) -> str:
-        return set_title_from_text(self.name)
+        return self.name
 
 
 class Recipe(models.Model):
@@ -102,7 +100,7 @@ class Recipe(models.Model):
         ordering = ['-pub_date']
 
     def __str__(self) -> str:
-        return set_title_from_text(self.name)
+        return self.name
 
 
 class RecipeIngrideint(models.Model):

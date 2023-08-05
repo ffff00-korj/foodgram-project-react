@@ -30,7 +30,6 @@ from api.serializers import (
     SubscriptionSerializer,
     TagSerializer,
 )
-from foodgram.utils import base64_file
 from recipe.models import (
     FavoriteRecipe,
     Ingredient,
@@ -77,7 +76,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             name=data['name'],
             cooking_time=data['cooking_time'],
             author=request.user,
-            image=base64_file(data['image']),
+            image=data['image'],
             text=data['text'],
         )
         recipe.save()
