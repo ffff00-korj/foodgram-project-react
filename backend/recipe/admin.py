@@ -2,7 +2,6 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-from foodgram.admin import BaseAdmin
 from recipe.models import (
     FavoriteRecipe,
     Ingredient,
@@ -37,7 +36,7 @@ class IngredientAdmin(ImportExportModelAdmin):
 
 
 @admin.register(Recipe)
-class RecipeAdmin(BaseAdmin):
+class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'name',
@@ -60,7 +59,7 @@ class RecipeAdmin(BaseAdmin):
 
 
 @admin.register(ShoppingList)
-class ShoppingListAdmin(BaseAdmin):
+class ShoppingListAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'user',
@@ -71,7 +70,7 @@ class ShoppingListAdmin(BaseAdmin):
 
 
 @admin.register(FavoriteRecipe)
-class FavoriteRecipeAdmin(BaseAdmin):
+class FavoriteRecipeAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'user',
@@ -82,14 +81,14 @@ class FavoriteRecipeAdmin(BaseAdmin):
 
 
 @admin.register(Tag)
-class TagAdmin(BaseAdmin):
+class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'color')
     list_editable = ('slug',)
     search_fields = ('slug',)
 
 
 @admin.register(Subscription)
-class SubscriptionAdmin(BaseAdmin):
+class SubscriptionAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'user',
