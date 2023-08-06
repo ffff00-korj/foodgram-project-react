@@ -54,7 +54,7 @@ class Tag(models.Model):
     class Meta:
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
-        ordering = ['slug']
+        ordering = ('slug',)
 
     def __str__(self) -> str:
         return self.name
