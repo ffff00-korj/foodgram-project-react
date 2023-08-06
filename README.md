@@ -61,7 +61,7 @@ cd infra/
 docker-compose up -d --build
 ```
 
-### Примените миграции:
+### Примените миграции
 
 ```bash
 docker-compose exec backend python manage.py migrate --noinput
