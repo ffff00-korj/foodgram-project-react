@@ -12,7 +12,6 @@ from rest_framework import (
 )
 from rest_framework.decorators import action
 
-from users.models import User
 from api.filters import IngredientFilter, RecipeFilter
 from api.pagination import PageLimitPagination
 from api.serializers import (
@@ -35,6 +34,7 @@ from recipe.models import (
     Subscription,
     Tag,
 )
+from users.models import User
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -53,7 +53,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def add_shopping_cart(serializer_class, pk, request):
         shopping_cart = {'user': request.user.pk, 'recipe': pk}
         serializer = serializer_class(
-            data=shopping_cart, context={"request": request}
+            data=shopping_cart,
+            context={"request": request},
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -66,7 +67,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def add_favorite(serializer_class, pk, request):
         favorite = {'user': request.user.pk, 'recipe': pk}
         serializer = serializer_class(
-            data=favorite, context={"request": request}
+            data=favorite,
+            context={"request": request},
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -91,7 +93,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @favorite.mapping.delete
     def delete_favorite(self, request, pk):
         get_object_or_404(
-            FavoriteRecipe, recipe=pk, user=request.user
+            FavoriteRecipe,
+            recipe=pk,
+            user=request.user,
         ).delete()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -107,7 +111,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 measurement_unit=F('ingredient__measurement_unit'),
             )
             .annotate(amount=Sum('amount'))
-            .order_by('name')
+            .order_by('name'),
         )
 
 
@@ -139,7 +143,8 @@ class SubscriptionCreateDelete(views.APIView):
             'author': user_id,
         }
         serializer = self.serializer_class(
-            data=subscription, context={"request": request}
+            data=subscription,
+            context={"request": request},
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()

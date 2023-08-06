@@ -74,9 +74,11 @@ class RecipeIngredientSerializer(serializers.Serializer):
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
     """Ингридиенты рецептов и их количество."""
+
     id = serializers.ReadOnlyField(source='ingredient.id')
     measurement_unit = serializers.ReadOnlyField(
-        source='ingredient.measurement_unit')
+        source='ingredient.measurement_unit',
+    )
     name = serializers.ReadOnlyField(source='ingredient.name')
 
     class Meta:
@@ -89,8 +91,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     """Serializer получения рецептов."""
 
     tags = TagSerializer(many=True)
-    ingredients = IngredientRecipeSerializer(
-        source='ingrideints', many=True)
+    ingredients = IngredientRecipeSerializer(source='ingrideints', many=True)
     author = UserSerializer()
     image = Base64ImageField()
     is_favorited = serializers.SerializerMethodField(read_only=True)

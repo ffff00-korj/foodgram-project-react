@@ -13,5 +13,6 @@ def shopping_cart_representation_response(ingredients):
         )
 
     return FileResponse(
-        BytesIO(bytes(result, 'utf8')), filename='shopping_list.txt'
+        BytesIO(bytes(result, 'utf8')),
+        filename='shopping_list.txt',
     )

@@ -11,7 +11,8 @@ class RecipeFilter(django_filters.FilterSet):
     )
     is_favorited = django_filters.NumberFilter(
         field_name='is_favorited',
-        method='is_favorited_filter')
+        method='is_favorited_filter',
+    )
 
     class Meta:
         model = Recipe
