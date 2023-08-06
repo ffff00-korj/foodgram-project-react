@@ -154,11 +154,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             'cooking_time',
         )
 
-    def create(self, validated_data):
-        ingredients = validated_data.pop('ingredients')
-        tags = validated_data.pop('tags')
-        recipe = Recipe.objects.create(**validated_data)
-        recipe.save()
+    @staticmethod
+    def create_recipe_ingredients(recipe, ingredients):
         for ingredient_data in ingredients:
             RecipeIngrideint.objects.create(
                 recipe=recipe,
@@ -166,28 +163,28 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
                 amount=ingredient_data.get('amount'),
             ).save()
 
-        for tag in tags:
-            recipe.tags.add(tag)
+    def create(self, validated_data):
+        ingredients = validated_data.pop('ingredients')
+        tags = validated_data.pop('tags')
+        recipe = Recipe.objects.create(**validated_data)
+        recipe.save()
+        self.create_recipe_ingredients(recipe, ingredients)
+        recipe.tags.set(tags)
 
         return recipe
 
     def to_representation(self, instance):
         return RecipeSerializer(
             instance,
-            context={"request": self.context.get("request")},
+            context={'request': self.context},
         ).data
 
     def update(self, recipe, validated_data):
         recipe.tags.clear()
         RecipeIngrideint.objects.filter(recipe=recipe).delete()
-        recipe.tags.set(validated_data.pop("tags"))
-        ingredients = validated_data.pop("ingredients")
-        for ingredient_data in ingredients:
-            RecipeIngrideint.objects.create(
-                recipe=recipe,
-                ingredient=ingredient_data.get('id'),
-                amount=ingredient_data.get('amount'),
-            ).save()
+        recipe.tags.set(validated_data.pop('tags'))
+        ingredients = validated_data.pop('ingredients')
+        self.create_recipe_ingredients(recipe, ingredients)
 
         return super().update(recipe, validated_data)
 
@@ -284,8 +281,12 @@ class SubscriptionListSerializer(UserSerializer):
         if request:
             limit = request.query_params.get('recipes_limit')
             if limit:
-                recipes = recipes[: int(limit)]
-        return RecipeSubsriptionSerializer(recipes, many=True).data
+                try:
+                    limit = int(limit)
+                except ValueError:
+                    return RecipeSubsriptionSerializer(recipes, many=True).data
+                recipes = recipes[: limit]
+            return RecipeSubsriptionSerializer(recipes, many=True).data
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
