@@ -61,7 +61,7 @@ class RecipeAdmin(admin.ModelAdmin):
     def _tags(self, recipe):
         return [tag.name for tag in recipe.tags.all()]
 
-    @admin.display(description='кол-во добавлений в избранное')
+    @admin.display(description='В избранном')
     def _favorite_count(self, recipe):
         return recipe.favorite.count()
 
