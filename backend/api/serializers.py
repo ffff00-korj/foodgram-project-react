@@ -93,7 +93,6 @@ class RecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     ingredients = IngredientRecipeSerializer(source='ingrideints', many=True)
     author = UserSerializer()
-    image = serializers.ImageField()
     is_favorited = serializers.SerializerMethodField(read_only=True)
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
 
