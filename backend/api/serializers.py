@@ -295,11 +295,13 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         fields = ('user', 'author')
 
     def validate(self, attrs):
-        if (
-            attrs.get('user')
-            .subscribed.filter(author=attrs.get('author'))
-            .exists()
-        ):
+        author = attrs.get('author')
+        user = attrs.get('user')
+        if author == user:
+            raise serializers.ValidationError(
+                'Нельзя подписаться на самого себя.',
+            )
+        if user.subscribed.filter(author=author).exists():
             raise serializers.ValidationError(
                 'Вы уже подписаны на этого автора.',
             )
