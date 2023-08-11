@@ -135,9 +135,6 @@ dmypy.json
 # .vscode
 .vscode
 
-# test data
-data/
-
 # debug config
 backend/DockerDebug
 infra/docker-compose-debug.yml
