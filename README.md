@@ -84,13 +84,3 @@ http://localhost/
 - Илья Боровков
 - Яндекс-практикум
 
-## Для ревью
-
-```env
-login: review
-pass: review1admin
-email: review@admin.ru
-
-host: corgxes-gram.ru
-host-ip: 158.160.68.64
-```
